@@ -1,0 +1,21 @@
+{
+    "name": "erendi/crudgenerator",
+    "description": "CRUD Genarator for laravel 8",
+    "type": "library",
+    "require": {
+        "php": "^7.3|^8.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Erendi\\Crudgenerator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "bimacoding",
+            "email": "bimacoding@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}

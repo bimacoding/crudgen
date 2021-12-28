@@ -1,0 +1,66 @@
+@extends('layouts.template')
+@section('content')
+    <section id="basic-vertical-layouts">
+        <div class="row match-height">
+            <div class="col-md-12 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">{{ $title }}
+                            @can('{{modelNameVariable}}-create')
+                                <a class="btn btn-success btn-sm float-right" href="{{ route('{{modelNameVariable}}s.create') }}"> Tambah
+                                    Baru</a>
+                            @endcan
+                        </h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            @if ($message = Session::get('success'))
+                                <div class="alert alert-success">
+                                    <p>{{ $message }}</p>
+                                </div>
+                            @endif
+
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center p-1" width="20">No</th>
+                                            {{htmlTh}}
+                                            <th width="280" class="text-center p-1">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (${{modelNameVariable}}s as $key => ${{modelNameVariable}})
+                                            <tr>
+                                                <td class="p-1">
+                                                    <center>{{ $key + 1 + $valuepage }}</center>
+                                                </td>
+                                                {{htmlTd}}
+                                                <td class="p-1">
+                                                    <center>
+                                                        @can('{{modelNameVariable}}-edit')
+                                                            <a class="btn btn-primary btn-sm"
+                                                                href="{{ route('{{modelNameVariable}}s.edit', ${{modelNameVariable}}->id) }}">Edit</a>
+                                                        @endcan
+                                                        @can('{{modelNameVariable}}-delete')
+                                                            {!! Form::open(['method' => 'DELETE', 'route' => ['{{modelNameVariable}}s.destroy', ${{modelNameVariable}}->id], 'style' => 'display:inline']) !!}
+                                                            {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
+                                                            {!! Form::close() !!}
+                                                        @endcan
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <p class="pt-1">{{ $labelcount }}</p>
+                            </div>
+                            {{ ${{modelNameVariable}}s->appends(['keyword' => Request::get('keyword')])->links('pagination::bootstrap-4') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+@endsection
