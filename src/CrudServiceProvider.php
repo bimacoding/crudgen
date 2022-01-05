@@ -38,6 +38,8 @@ class CrudServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../stubs/controller.stub' => base_path('stubs/source/controller.stub'),
             __DIR__.'/../stubs/model.stub' => base_path('stubs/source/model.stub'),
+            __DIR__.'/../stubs/model.relations.stub' => base_path('stubs/source/model.relations.stub'),
+            __DIR__.'/../stubs/model.table.relations.stub' => base_path('stubs/source/model.table.relations.stub'),
             __DIR__.'/../stubs/model.table.stub' => base_path('stubs/source/model.table.stub'),
             __DIR__.'/../stubs/migration.stub' => base_path('stubs/source/migration.stub'),
             __DIR__.'/../stubs/migration.table.stub' => base_path('stubs/source/migration.table.stub'),
