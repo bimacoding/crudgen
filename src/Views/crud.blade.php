@@ -99,6 +99,44 @@
                                             </table>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-12">
+                                        <h6>Relations</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead style="font-size: 9px;" class="bg-dark text-white">
+                                                    <tr class="text-white">
+                                                        <th width="200" class="p-1 text-white">
+                                                            <center>Relation type</center>
+                                                        </th>
+                                                        <th width="200" class="p-1 text-white">
+                                                            <center>Foreign Model<sup>*</sup></center>
+                                                        </th>
+                                                        <th width="200" class="p-1 text-white">
+                                                            <center>Foreign Key</center>
+                                                        </th>
+                                                        <th class="p-1 text-white" width="200">
+                                                            <center>Local Key</center>
+                                                        </th>
+                                                        <th class="p-1 text-white" width="200">
+                                                            <center>Field Show <i class="bx bx-info-circle"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    title="Pada select box file mana yang akan di tampilkan dari foreign model, contoh jika anda memiliki table post denga field : title, text, created_at, dll maka pilih salah satu dari field tersebut"></i>
+                                                            </center>
+
+                                                        </th>
+                                                        <th class="p-1 text-white" width="70">
+                                                            <center>
+                                                                <button type="button" class="btn btn-success btn-sm"
+                                                                    id="addrelation"><strong>+</strong></button>
+                                                            </center>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="addrelationtable"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                     <div class="col-12 d-flex justify-content-end border-top">
                                         <button type="submit" class="btn btn-primary btn-sm mr-1 mb-1 mt-1"
                                             id="save">Proses</button>

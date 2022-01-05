@@ -14,7 +14,7 @@ class Create{{modelName}}Table extends Migration
     public function up()
     {
         Schema::create('{{modelNameVariable}}s', function (Blueprint $table) {
-            {{dataTable}}
+{{dataTable}}
             $table->timestamps();
         });
     }

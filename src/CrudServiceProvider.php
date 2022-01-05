@@ -4,6 +4,7 @@ namespace Erendi\Crudgenerator;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
+use Erendi\Crudgenerator\Commands\CrudInit;
 
 class CrudServiceProvider extends ServiceProvider
 {
@@ -44,6 +45,9 @@ class CrudServiceProvider extends ServiceProvider
             __DIR__.'/../stubs/edit.stub' => base_path('stubs/source/edit.stub'),
             __DIR__.'/../stubs/index.stub' => base_path('stubs/source/index.stub'),
         ], 'stubs');
+        $this->commands([
+            CrudInit::class
+        ]);
         // $this->publishes([
         //     __DIR__ . '/../migrations/2021_12_10_088881_create_provinces_table.php' => database_path('migrations/2021_12_10_088881_create_provinces_table.php'),
         //     __DIR__ . '/../migrations/2021_12_10_088882_create_cities_table.php' => database_path('migrations/2021_12_10_088882_create_cities_table.php'),

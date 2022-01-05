@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class {{modelName}} extends Model
 {
     use HasFactory;
-    protected $table = '{{modelTable}}';
     protected $fillable = [{{modelFillable}}];
+
+{{relations}}
 }

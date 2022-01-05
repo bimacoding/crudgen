@@ -21,8 +21,101 @@ class Crudgen {
         return "->where('".$field."', 'like', \"%{\$request->keyword}%\")";
     }
 
-    public static function buildHtml($type,$name){
+    public static function createRelationModels(array $arr){
         $out = '';
+        foreach($arr as $k => $r){
+            $out .= (new Crudgen)->buildRelation($r['relType'],$r['relModel'],$r['relForeign'],$r['relLocal']);
+        }
+        return $out;
+    }
+
+    public static function buildRelationHtmlCreate($modelname,$foreign,$local,string $fileshow = null)
+    {
+        $out = '';
+        $out .= "<div class=\"col-12\">";
+        $out .= "<div class=\"form-group\">";
+        $out .= "<label>".$modelname."</label>";
+        $out .= "<select class=\"form-control\" name=\"".$foreign."\">\n";
+        $out .= "@foreach(\$".strtolower($modelname)." as \$result)\n";
+        $out .= "\t<option value=\"{{\$result->".$local."}}\">{{\$result->".$fileshow."}}</option>\n";
+        $out .= "@endforeach\n";
+        $out .= "</select>\n";
+        $out .= "</div>";
+        $out .= "</div>";
+        return $out;
+    }
+
+    public static function buildRelationHtmlEdit($modelname,$foreign,$local,string $fileshow = null,$m)
+    {
+        $out = '';
+        $out .= "<div class=\"col-12\">";
+        $out .= "<div class=\"form-group\">";
+        $out .= "<label>".$modelname."</label>";
+        $out .= "<select class=\"form-control\" name=\"".$foreign."\">\n";
+        $out .= "@foreach(\$".strtolower($modelname)." as \$result)\n";
+        $out .= "\t<option value=\"{{\$result->".$local."}}\" {!! \$".$m."->".$foreign." == \$result->".$local." ? 'selected' : '' !!}>{{\$result->".$fileshow."}}</option>\n";
+        $out .= "@endforeach\n";
+        $out .= "</select>\n";
+        $out .= "</div>";
+        $out .= "</div>";
+        return $out;
+    }
+
+    public static function renderRelationFormCreate(array $arr)
+    {
+        $out = '';
+        foreach($arr as $r){
+            $out .= (new Crudgen)->buildRelationHtmlCreate($r['relModel'],$r['relForeign'],$r['relLocal'],$r['relFieldShow']);
+        }
+        return $out;
+    }
+
+    public static function renderRelationFormEdit(array $arr, string $m)
+    {
+        $out = '';
+        foreach($arr as $r){
+            $out .= (new Crudgen)->buildRelationHtmlEdit($r['relModel'],$r['relForeign'],$r['relLocal'],$r['relFieldShow'],$m);
+        }
+        return $out;
+    }
+
+    public static function buildRelation($type,$modelname,$foreign,$local){
+        $out = '';
+
+        switch ($type) {
+            case 'hasOne':
+                $out .= "\tpublic function ".strtolower($modelname)."(){\r\n";
+                $out .= "\t\treturn \$this->".$type."(".ucwords($modelname)."::class,'".$foreign."','".$local."');\r\n";
+                $out .= "\t}\t\n";
+                break;
+            case 'hasMany':
+                $out .= "\tpublic function ".strtolower($modelname)."(){\r\n";
+                $out .= "\t\treturn \$this->".$type."(".ucwords($modelname)."::class);\r\n";
+                $out .= "\t}\t\n";
+                break;
+            case 'belongsTo':
+                $out .= "\tpublic function ".strtolower($modelname)."(){\r\n";
+                $out .= "\t\treturn \$this->".$type."(".ucwords($modelname)."::class,'".$foreign."');\r\n";
+                $out .= "\t}\t\n";
+                break;
+            case 'belongsToMany':
+                $out .= "\tpublic function ".strtolower($modelname)."(){\r\n";
+                $out .= "\t\treturn \$this->".$type."(".ucwords($modelname)."::class);\r\n";
+                $out .= "\t}\t\n";
+                break;
+            default:
+                $out .= '';
+                break;
+        }
+        return $out;
+    }
+
+    public static function buildHtml($type,$name, $enumfield = null){
+        $out = '';
+        if($enumfield!=null){
+            $opt = '';
+            foreach(explode(',',$enumfield) as $ef){ $opt .= "\t<option value=\"".str_replace(['\'',','],'', $ef)."\">".str_replace(['\'',','],'', $ef)."</option>\n"; }
+        }
         switch ($type) {
             case 'text':
             case 'file':
@@ -44,6 +137,14 @@ class Crudgen {
                 $out .= "</div>";
                 $out .= "</div>";
                 break;
+            case 'select':
+                $out .= "<div class=\"col-12\">";
+                $out .= "<div class=\"form-group\">";
+                $out .= "<label>".$name."</label>";
+                $out .= "<select name=\"".$name."\" class=\"form-control\">\n<option value=\"-\">-- select --</option>\n".$opt."</select>";
+                $out .= "</div>";
+                $out .= "</div>";
+                break;
             default:
                 $out .= '';
                 break;
@@ -51,8 +152,14 @@ class Crudgen {
         return $out;
     }
 
-    public static function buildHtmlEdit($type,$name,$param){
+    public static function buildHtmlEdit($type,$name,$param, $enumfield = null){
         $out = '';
+        if($enumfield!=null){
+            $opt = '';
+            foreach(explode(',',$enumfield) as $ef){
+                $opt .= "\t<option value=\"".str_replace(['\'',','],'', $ef)."\" {!! (\$".$param."->".$name." == '".str_replace(['\'',','],'', $ef).") ? 'selected' : '') !!}>".str_replace(['\'',','],'', $ef)."</option>\n";
+            }
+        }
         switch ($type) {
             case 'text':
             case 'number':
@@ -61,7 +168,7 @@ class Crudgen {
                 $out .= "<div class=\"col-12\">";
                 $out .= "<div class=\"form-group\">";
                 $out .= "<label>".$name."</label>";
-                $out .= "<input name=\"".$name."\" class=\"form-control\" type=\"".$type."\" value=\"{{".$param."->".$name."}}\">";
+                $out .= "<input name=\"".$name."\" class=\"form-control\" type=\"".$type."\" value=\"{{\$".$param."->".$name."}}\">";
                 $out .= "</div>";
                 $out .= "</div>";
                 break;
@@ -69,7 +176,7 @@ class Crudgen {
                 $out .= "<div class=\"col-12\">";
                 $out .= "<div class=\"form-group\">";
                 $out .= "<label>".$name."</label>";
-                $out .= "<textarea name=\"".$name."\" class=\"form-control\" rows=\"10\">{{".$param."->".$name."}}</textarea>";
+                $out .= "<textarea name=\"".$name."\" class=\"form-control\" rows=\"10\">{{\$".$param."->".$name."}}</textarea>";
                 $out .= "</div>";
                 $out .= "</div>";
                 break;
@@ -78,6 +185,14 @@ class Crudgen {
                 $out .= "<div class=\"form-group\">";
                 $out .= "<label>".$name."</label>";
                 $out .= "<input name=\"".$name."\" class=\"form-control\" type=\"".$type."\">";
+                $out .= "</div>";
+                $out .= "</div>";
+                break;
+            case 'select':
+                $out .= "<div class=\"col-12\">";
+                $out .= "<div class=\"form-group\">";
+                $out .= "<label>".$name."</label>";
+                $out .= "<select name=\"".$name."\" class=\"form-control\">\n".$opt."</select>";
                 $out .= "</div>";
                 $out .= "</div>";
                 break;
@@ -98,47 +213,89 @@ class Crudgen {
         return $out;
     }
 
-    public static function buildTypeData($type,$name){
+    public static function buildTypeData($type,$name,$enumfield = null,$foreign){
         $out = '';
         switch ($type) {
             case 'string':
-                $out .= "\$table->".$type."('".$name."',255)->nullable();\r\n";
+                $out .= "\t\t\t\$table->".$type."('".$name."',255)->nullable();\r\n";
                 break;
             case 'text':
-                $out .= "\$table->".$type."('".$name."')->nullable();\r\n";
+                $out .= "\t\t\t\$table->".$type."('".$name."')->nullable();\r\n";
                 break;
             case 'increments':
-                $out .= "\$table->".$type."('".$name."');\r\n";
+                $out .= "\t\t\t\$table->".$type."('".$name."');\r\n";
                 break;
             case 'integer':
-                $out .= "\$table->".$type."('".$name."')->default(0);\r\n";
+                $out .= "\t\t\t\$table->".$type."('".$name."')->nullable()->default(0);\r\n";
+                break;
+            case 'unsignedInteger':
+                $out .= "\t\t\t\$table->unsignedInteger('".$name."');\n";
+                $out .= "\t\t\t\$table->foreign('".$name."')->references('id')->on('".explode('_',$name)[0]."s');\r\n";
+                break;
+            case 'unsignedBigInteger':
+                $out .= "\t\t\t\$table->unsignedBigInteger('".$name."');\n";
+                $out .= "\t\t\t\$table->foreign('".$name."')->references('id')->on('".explode('_',$name)[0]."s');\r\n";
                 break;
             case 'biginteger':
-                $out .= "\$table->bigInteger('".$name."')->default(0);\r\n";
+                $out .= "\t\t\t\$table->bigInteger('".$name."')->default(0);\r\n";
                 break;
             case 'timestamps':
-                $out .= "\$table->".$type."('".$name."')->nullable();\r\n";
+                $out .= "\t\t\t\$table->".$type."('".$name."')->nullable();\r\n";
                 break;
             case 'longtext':
-                $out .= "\$table->longText('".$name."')->nullable();\r\n";
+                $out .= "\t\t\t\$table->longText('".$name."')->nullable();\r\n";
                 break;
             case 'mediumtext':
-                $out .= "\$table->mediumText('".$name."')->nullable();\r\n";
+                $out .= "\t\t\t\$table->mediumText('".$name."')->nullable();\r\n";
                 break;
             case 'boolean':
-                $out .= "\$table->".$type."('".$name."')->nullable();\r\n";
+                $out .= "\t\t\t\$table->".$type."('".$name."')->nullable();\r\n";
                 break;
             case 'float':
-                $out .= "\$table->".$type."('".$name."',10,0)->nullable();\r\n";
+                $out .= "\t\t\t\$table->".$type."('".$name."',10,0)->nullable();\r\n";
                 break;
             case 'double':
-                $out .= "\$table->".$type."('".$name."',10,0)->nullable();\r\n";
+                $out .= "\t\t\t\$table->".$type."('".$name."',10,0)->nullable();\r\n";
+                break;
+            case 'enum':
+                $out .= "\t\t\t\$table->".$type."('".$name."',[$enumfield])->nullable()->default(".explode(',',$enumfield)[0].");\r\n";
                 break;
             default:
                 $out .= "";
                 break;
         }
         return $out;
+    }
+
+    public static function bindRelationToController(array $arr)
+    {
+        $out = '';
+        foreach($arr as $k){
+            $out .= "\t\t\$".strtolower($k['relModel'])." = ".$k['relModel']."::all();\n";
+        }
+        return $out;
+    }
+
+    public static function bindRelationToCompact(array $arr)
+    {
+        $out = '';
+        foreach($arr as $k){
+            $out .= ",'".strtolower($k['relModel'])."'";
+        }
+        return $out;
+    }
+
+    public static function bindRelationNamespace(array $arr)
+    {
+        $out = '';
+        foreach($arr as $k){
+            $out .= "use ".config('erendicrudgenerator.namespace.model')."\\".$k['relModel'].";\n";
+        }
+        return $out;
+    }
+
+    public static function renameModel(string $str){
+        return str_replace(' ','',ucwords(str_replace(['_','-'],' ',$str)));
     }
 
     public static function createCrud(array $arr,array $rep){
@@ -162,6 +319,13 @@ class Crudgen {
                 file_put_contents($target, $newdata);
             }
         }
+        return true;
+    }
+
+    public static function addRoute($string){
+        $data = file_get_contents(base_path('routes/web.php'));
+        $newdata =  preg_replace('!/\*.*?\*/!s', $string, $data);
+        file_put_contents(base_path('routes/web.php'), $newdata);
         return true;
     }
 }

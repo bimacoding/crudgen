@@ -22,6 +22,7 @@
                             {!! Form::model(${{modelNameVariable}}, ['method' => 'PATCH', 'route' => ['{{modelNameVariable}}s.update', ${{modelNameVariable}}->id]]) !!}
                             <div class="form-body">
                                 <div class="row">
+                                    {{htmlRelationEdit}}
                                     {{htmlEdit}}
                                     <div class="col-12 d-flex justify-content-end border-top">
                                         <button type="submit" class="btn btn-primary btn-sm mr-1 mb-1 mt-1">Proses</button>

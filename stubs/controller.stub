@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\{{modelName}};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+{{modelRelationNamespace}}
 
 class {{modelName}}Controller extends Controller
 {
@@ -33,7 +34,8 @@ class {{modelName}}Controller extends Controller
     public function create()
     {
         $title = "Tambah Record";
-        return view('be.{{modelNameVariable}}.create',compact('title'));
+{{modelRelation}}
+        return view('be.{{modelNameVariable}}.create',compact('title'{{modelRelationVariable}}));
     }
 
     public function store(Request $request)
@@ -52,7 +54,8 @@ class {{modelName}}Controller extends Controller
     {
         $title = "Ubah Record";
         ${{modelNameVariable}} = {{modelName}}::find($id);
-        return view('be.{{modelNameVariable}}.edit',compact('title','{{modelNameVariable}}'));
+{{modelRelation}}
+        return view('be.{{modelNameVariable}}.edit',compact('title','{{modelNameVariable}}'{{modelRelationVariable}}));
     }
 
     public function update(Request $request, $id)
