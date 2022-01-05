@@ -37,6 +37,7 @@ class CrudServiceProvider extends ServiceProvider
         ], 'config');
         $this->publishes([
             __DIR__.'/../stubs/controller.stub' => base_path('stubs/source/controller.stub'),
+            __DIR__.'/../stubs/controller.fileupload.stub' => base_path('stubs/source/controller.fileupload.stub'),
             __DIR__.'/../stubs/model.stub' => base_path('stubs/source/model.stub'),
             __DIR__.'/../stubs/model.relations.stub' => base_path('stubs/source/model.relations.stub'),
             __DIR__.'/../stubs/model.table.relations.stub' => base_path('stubs/source/model.table.relations.stub'),
@@ -50,12 +51,6 @@ class CrudServiceProvider extends ServiceProvider
         $this->commands([
             CrudInit::class
         ]);
-        // $this->publishes([
-        //     __DIR__ . '/../migrations/2021_12_10_088881_create_provinces_table.php' => database_path('migrations/2021_12_10_088881_create_provinces_table.php'),
-        //     __DIR__ . '/../migrations/2021_12_10_088882_create_cities_table.php' => database_path('migrations/2021_12_10_088882_create_cities_table.php'),
-        //     __DIR__ . '/../migrations/2021_12_10_088883_create_districts_table.php' => database_path('migrations/2021_12_10_088883_create_districts_table.php'),
-        //     __DIR__ . '/../migrations/2021_12_10_088884_create_subdistricts_table.php' => database_path('migrations/2021_12_10_088884_create_subdistricts_table.php'),
-        // ], 'migrations');
     }
 
 }

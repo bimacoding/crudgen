@@ -19,7 +19,7 @@
                                     </ul>
                                 </div>
                             @endif
-                            {!! Form::open(['route' => '{{modelNameVariable}}s.store', 'method' => 'POST', 'class' => 'form form-vertical']) !!}
+                            {!! Form::open(['route' => '{{modelNameVariable}}s.store', 'method' => 'POST', 'class' => 'form form-vertical','enctype' => 'multipart/form-data']) !!}
                             <div class="form-body">
                                 <div class="row">
                                     {{htmlRelationCreate}}

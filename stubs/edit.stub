@@ -19,7 +19,7 @@
                                     </ul>
                                 </div>
                             @endif
-                            {!! Form::model(${{modelNameVariable}}, ['method' => 'PATCH', 'route' => ['{{modelNameVariable}}s.update', ${{modelNameVariable}}->id]]) !!}
+                            {!! Form::model(${{modelNameVariable}}, ['method' => 'PATCH', 'route' => ['{{modelNameVariable}}s.update', ${{modelNameVariable}}->id],'enctype' => 'multipart/form-data']) !!}
                             <div class="form-body">
                                 <div class="row">
                                     {{htmlRelationEdit}}

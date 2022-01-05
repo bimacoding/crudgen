@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Http\Controllers\Be;
+
+use App\Http\Controllers\Controller;
+use App\Models\{{modelName}};
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+{{modelRelationNamespace}}
+
+class {{modelName}}Controller extends Controller
+{
+    function __construct()
+    {
+         $this->middleware('permission:{{modelNameVariable}}-list|{{modelNameVariable}}-create|{{modelNameVariable}}-edit|{{modelNameVariable}}-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:{{modelNameVariable}}-create', ['only' => ['create','store']]);
+         $this->middleware('permission:{{modelNameVariable}}-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:{{modelNameVariable}}-delete', ['only' => ['destroy']]);
+    }
+
+    public function index(Request $request)
+    {
+        $title = "Semua Record";
+        $pagination  = {{paginationForm}};
+        ${{modelNameVariable}}s = {{modelName}}::when($request->keyword, function ($query) use ($request) {
+                // $query->where('page', 'like', "%{$request->keyword}%");
+                $query{{searchAble}};
+            })->orderBy('id', 'ASC')->paginate($pagination);
+        $valuepage = ((${{modelNameVariable}}s->currentPage() - 1) * ${{modelNameVariable}}s->perPage());
+        $labelcount = "Menampilkan ". ($valuepage + 1) ." sampai ". ($valuepage + ${{modelNameVariable}}s->count()) . " Data dari ". ${{modelNameVariable}}s->total(). " Data";
+        return view('be.{{modelNameVariable}}.index', compact('{{modelNameVariable}}s', 'valuepage', 'labelcount','title'));
+    }
+
+    public function create()
+    {
+        $title = "Tambah Record";
+{{modelRelation}}
+        return view('be.{{modelNameVariable}}.create',compact('title'{{modelRelationVariable}}));
+    }
+
+    public function store(Request $request)
+    {
+        {{validation}}
+{{fileStoreScript}}
+        {{modelName}}::create($input);
+        return redirect()->route('{{modelNameVariable}}s.index')->with('success','Data berhasi diproses');
+    }
+
+    public function show({{modelName}} ${{modelNameVariable}})
+    {
+        //
+    }
+
+    public function edit($id)
+    {
+        $title = "Ubah Record";
+        ${{modelNameVariable}} = {{modelName}}::find($id);
+{{modelRelation}}
+        return view('be.{{modelNameVariable}}.edit',compact('title','{{modelNameVariable}}'{{modelRelationVariable}}));
+    }
+
+    public function update(Request $request, $id)
+    {
+        {{validation}}
+        ${{modelNameVariable}} = {{modelName}}::find($id);
+{{fileUpdateScript}}
+        ${{modelNameVariable}}->update($input);
+        return redirect()->route('{{modelNameVariable}}s.index')->with('success','Data berhasi diproses');
+    }
+
+    public function destroy({{modelName}} ${{modelNameVariable}})
+    {
+        ${{modelNameVariable}}->delete();
+        return redirect()->route('{{modelNameVariable}}s.index')->with('success','Data berhasi diproses');
+    }
+}

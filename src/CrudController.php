@@ -43,6 +43,8 @@ class CrudController extends Controller
         $brt = '';
         $brc = '';
         $brn = '';
+        $controllerFileStore = '';
+        $controllerFileUpdate = '';
         foreach($request->all()['addmore'] as $k){
 
             if (isset($k['fillableForm'])) {
@@ -55,6 +57,11 @@ class CrudController extends Controller
 
             if (isset($k['searchableForm']) && !isset($k['isForeignForm'])) {
                 $serachAble .= Crudgen::buildSearchable($k['fieldNameForm']);
+            }
+
+            if($k['htmlTypeForm']=='file'){
+                $controllerFileStore .= Crudgen::buildScriptUploadFileInController($k['fieldNameForm'],'store');
+                $controllerFileUpdate .= Crudgen::buildScriptUploadFileInController($k['fieldNameForm'],'update');
             }
 
             if (isset($k['inFormForm']) && !isset($k['isForeignForm'])) {
@@ -88,6 +95,8 @@ class CrudController extends Controller
             '{{paginationForm}}' => intVal($request->paginationRecord),
             '{{modelNameSpace}}' => config('erendicrudgenerator.namespace.model'),
             '{{modelFillable}}' => implode(',',$fillable),
+            '{{fileStoreScript}}'=>$controllerFileStore,
+            '{{fileUpdateScript}}'=>$controllerFileUpdate,
             '{{dataTable}}' => $dataDB,
             '{{validation}}' => !empty($validasi) ? "\$request->validate([".$validasi."]);" : '',
             '{{searchAble}}' => $serachAble,
@@ -97,7 +106,7 @@ class CrudController extends Controller
             '{{htmlTd}}' => $tdInsert,
             '{{htmlRelationCreate}}' => $hrc,
             '{{htmlRelationEdit}}' => $hre,
-            '{{relations}}' => $rlt,
+            '{{relations}}' => (!isset($rlt) ? $rlt : (!isset($request->relations_column)?'':Crudgen::createRelationModels($request->relations_column))),
             '{{modelRelation}}' => $brt,
             '{{modelRelationVariable}}' => $brc,
             '{{modelRelationNamespace}}' => $brn,
@@ -128,7 +137,7 @@ class CrudController extends Controller
                 'target'=>str_replace('\\','/',config('erendicrudgenerator.path.controller').'Be/'),
                 'source'=>str_replace('\\','/',config('erendicrudgenerator.path.stub')),
                 'new'   =>ucwords($request->modelName).'Controller.php',
-                'stub'  =>'controller.stub'
+                'stub'  =>(!empty($controllerFileStore) && !empty($controllerFileUpdate)) ? 'controller.fileupload.stub' : 'controller.stub'
             ],[
                 'view' => [
                     [
@@ -153,8 +162,8 @@ class CrudController extends Controller
         // dd(array_merge($pathslist,$model));
         $exec = Crudgen::createCrud($pathslist,$model);
         if ($exec) {
-        //     Crudgen::addRoute("Route::resource('/".strtolower($request->modelName)."s', Be\\".ucwords($request->modelName)."Controller::class);\n\t/*new route*/");
-        //     Artisan::call('crud:init');
+            Crudgen::addRoute("Route::resource('/".strtolower($request->modelName)."s', Be\\".ucwords($request->modelName)."Controller::class);\n\t/*new route*/");
+            Artisan::call('crud:init');
             return response()->json(['success'=>'Data Berhasil Diproses']);
         }
     }

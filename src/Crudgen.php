@@ -13,6 +13,41 @@ class Crudgen {
         return view('crud::scripts');
     }
 
+    public static function buildScriptUploadFileInController($name,string $type)
+    {
+        $out = '';
+        if($type == 'store'){
+            $out .= "\t\t\$file = \$request->file('".$name."');\r\n";
+            $out .= "\t\t\$input = \$request->all();\r\n";
+            $out .= "\t\tif (file_exists(\$file)) {\r\n";
+            $out .= "\t\t\t\$nama_file = \$file->getClientOriginalName();\r\n";
+            $out .= "\t\t\t\$pathfile = Storage::putFileAs(\r\n";
+            $out .= "\t\t\t\t'public/upload',\r\n";
+            $out .= "\t\t\t\t\$file,\r\n";
+            $out .= "\t\t\t\ttime().\"_\".\$nama_file,\r\n";
+            $out .= "\t\t\t);\r\n";
+            $out .= "\t\t\t}\r\n";
+            $out .= "\t\t\$input['".$name."'] = basename(\$pathfile);\r\n";
+        }else{
+            $out .= "\t\t\$file = \$request->file('".$name."');\r\n";
+            $out .= "\t\t\$input = \$request->except('imagenow');\r\n";
+            $out .= "\t\tif (file_exists(\$file)) {\r\n";
+            $out .= "\t\t\tStorage::disk('public')->delete('upload/'.\$request->imagenow);\r\n";
+            $out .= "\t\t\t\$nama_file = \$file->getClientOriginalName();\r\n";
+            $out .= "\t\t\t\$pathfile = Storage::putFileAs(\r\n";
+            $out .= "\t\t\t\t'public/upload',\r\n";
+            $out .= "\t\t\t\t\$file,\r\n";
+            $out .= "\t\t\t\ttime().\"_\".\$nama_file,\r\n";
+            $out .= "\t\t\t);\r\n";
+            $out .= "\t\t\t\$input['".$name."'] = basename(\$pathfile);\r\n";
+            $out .= "\t\t}else{\r\n";
+            $out .= "\t\t\t\$input['".$name."'] = \$request->imagenow;\r\n";
+            $out .= "\t\t}\r\n";
+
+        }
+        return $out;
+    }
+
     public static function buildValidationData($name, $valid){
         return "'".$name."' => '".$valid."',";
     }
@@ -185,6 +220,7 @@ class Crudgen {
                 $out .= "<div class=\"form-group\">";
                 $out .= "<label>".$name."</label>";
                 $out .= "<input name=\"".$name."\" class=\"form-control\" type=\"".$type."\">";
+                $out .= "<input type=\"hidden\" name=\"imagenow\" class=\"form-control\" value=\"{{\$".$param."->".$name."}}\">";
                 $out .= "</div>";
                 $out .= "</div>";
                 break;
