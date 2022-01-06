@@ -90,7 +90,7 @@
             '][validationsForm]" id="validationsForm" class="form-control"></td>'
         html +=
             '<td width="200" class="p-1"><select name="addmore[' + number +
-            '][htmlTypeForm]" id="htmlTypeForm" class="form-control"><option value="number"> number </option><option value="text"> text </option><option value="textarea"> textarea </option><option value="password"> password </option><option value="email"> email </option><option value="date"> date </option><option value="select"> select </option></select></td>'
+            '][htmlTypeForm]" id="htmlTypeForm" class="form-control"><option value="number"> number </option><option value="text"> text </option><option value="textarea"> textarea </option><option value="password"> password </option><option value="file"> file </option><option value="email"> email </option><option value="date"> date </option><option value="select"> select </option></select></td>'
         html += '<td class="p-1"><center><input type="checkbox" name="addmore[' + number +
             '][primaryForm]" ></center></td>'
         html += '<td class="p-1"><center><input type="checkbox" name="addmore[' + number +

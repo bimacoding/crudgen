@@ -19,8 +19,8 @@
                         <div class="alert alert-success print-success-msg" style="display: none">
                             <ul></ul>
                         </div>
-                        <form class="form-data" id="" method="post" action="{{ route('crud.insert') }}">
-                            {{-- <form class="form-data" id="dynamic_form" method="post"> --}}
+                        {{-- <form class="form-data" id="" method="post" action="{{ route('crud.insert') }}"> --}}
+                        <form class="form-data" id="dynamic_form" method="post">
                             @csrf
                             <div class="form-body">
                                 <div class="row">
