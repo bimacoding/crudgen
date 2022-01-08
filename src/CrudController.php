@@ -98,7 +98,7 @@ class CrudController extends Controller
             '{{fileStoreScript}}'=>$controllerFileStore,
             '{{fileUpdateScript}}'=>$controllerFileUpdate,
             '{{dataTable}}' => $dataDB,
-            '{{validation}}' => !empty($validasi) ? "\$request->validate([".$validasi."]);" : '',
+            '{{validation}}' => !empty($validasi) ? "\t\t\$validator = Validator::make(\$request->all(), [".$validasi."]);\r\n\t\tif(\$validator->fails()){\r\n\t\t\treturn redirect()->back()->withErrors(\$validator)->withInput(\$request->all);\r\n\t\t}\r\n" : '',
             '{{searchAble}}' => $serachAble,
             '{{htmlCreate}}' => $htmlCreate,
             '{{htmlEdit}}' => $htmlEdit,

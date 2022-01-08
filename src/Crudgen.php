@@ -160,7 +160,7 @@ class Crudgen {
                 $out .= "<div class=\"col-12\">";
                 $out .= "<div class=\"form-group\">";
                 $out .= "<label>".$name."</label>";
-                $out .= "<input name=\"".$name."\" class=\"form-control\" type=\"".$type."\">";
+                $out .= "<input name=\"".$name."\" class=\"form-control\" type=\"".$type."\" value=\"{{ old('".$name."') }}\">";
                 $out .= "</div>";
                 $out .= "</div>";
                 break;
@@ -168,7 +168,7 @@ class Crudgen {
                 $out .= "<div class=\"col-12\">";
                 $out .= "<div class=\"form-group\">";
                 $out .= "<label>".$name."</label>";
-                $out .= "<textarea name=\"".$name."\" class=\"form-control\" rows=\"10\"></textarea>";
+                $out .= "<textarea name=\"".$name."\" class=\"form-control\" rows=\"10\">{{ old('".$name."') }}</textarea>";
                 $out .= "</div>";
                 $out .= "</div>";
                 break;
