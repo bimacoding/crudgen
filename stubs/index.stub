@@ -26,7 +26,7 @@
                                         <tr>
                                             <th class="text-center p-1" width="20">No</th>
                                             {{htmlTh}}
-                                            <th width="280" class="text-center p-1">Action</th>
+                                            <th width="280" class="text-center p-1">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -40,11 +40,11 @@
                                                     <center>
                                                         @can('{{modelNameVariable}}-edit')
                                                             <a class="btn btn-primary btn-sm"
-                                                                href="{{ route('{{modelNameVariable}}s.edit', ${{modelNameVariable}}->id) }}">Edit</a>
+                                                                href="{{ route('{{modelNameVariable}}s.edit', ${{modelNameVariable}}->id) }}">Ubah</a>
                                                         @endcan
                                                         @can('{{modelNameVariable}}-delete')
                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['{{modelNameVariable}}s.destroy', ${{modelNameVariable}}->id], 'style' => 'display:inline']) !!}
-                                                            {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
+                                                            {!! Form::submit('Hapus', ['class' => 'btn btn-danger btn-sm']) !!}
                                                             {!! Form::close() !!}
                                                         @endcan
                                                     </center>
