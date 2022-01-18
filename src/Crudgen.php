@@ -259,7 +259,7 @@ class Crudgen {
                 $out .= "\t\t\t\$table->".$type."('".$name."')->nullable();\r\n";
                 break;
             case 'increments':
-                $out .= "\t\t\t\$table->".$type."('".$name."');\r\n";
+                $out .= "\t\t\t\$table->bigIncrements('".$name."');\r\n";
                 break;
             case 'integer':
                 $out .= "\t\t\t\$table->".$type."('".$name."')->nullable()->default(0);\r\n";
@@ -277,6 +277,9 @@ class Crudgen {
                 break;
             case 'timestamps':
                 $out .= "\t\t\t\$table->".$type."('".$name."')->nullable();\r\n";
+                break;
+            case 'date':
+                $out .= "\t\t\t\$table->".$type."('".$name."');\r\n";
                 break;
             case 'longtext':
                 $out .= "\t\t\t\$table->longText('".$name."')->nullable();\r\n";
