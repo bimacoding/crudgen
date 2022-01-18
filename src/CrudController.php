@@ -162,9 +162,15 @@ class CrudController extends Controller
         // dd(array_merge($pathslist,$model));
         $exec = Crudgen::createCrud($pathslist,$model);
         if ($exec) {
-            Crudgen::addRoute("Route::resource('/".strtolower($request->modelName)."s', Be\\".ucwords($request->modelName)."Controller::class);\n\t/*new route*/");
-            Artisan::call('crud:init');
-            return response()->json(['success'=>'Data Berhasil Diproses']);
+            try {
+                Crudgen::addRoute("Route::resource('/".strtolower($request->modelName)."s', Be\\".ucwords($request->modelName)."Controller::class);\n\t/*new route*/");
+                Artisan::call('crud:init');
+                return response()->json(['success'=>'Data Berhasil Diproses']);
+            } catch (Exception $e) {
+                throw response()->json(['error'=>'Gagal Memproses Data, silahkan cek folder migration, model, dan controller anda. mungkin file/data dengan nama model sudah dibuat sebelumnya']);
+            }
+        }else{
+            return response()->json(['error'=>'Gagal Membuat Generator Silahkan Ulang Kembali']);
         }
     }
 }
