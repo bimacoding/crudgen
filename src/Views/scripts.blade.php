@@ -82,7 +82,7 @@
         html +=
             '<td width="200" class="p-1"><select name="addmore[' + number +
             '][dbTypeForm]" id="' + number +
-            '" class="form-control" onchange="addenumfiled(this)"><option value="increments"> Increments </option><option value="integer"> Integer </option><option value="unsignedInteger"> unsignedInteger </option><option value="biginteger"> BigInteger </option><option value="unsignedBigInteger"> unsignedBigInteger </option><option value="string"> String </option><option value="timestamps"> Timestamps </option><option value="date"> Date </option><option value="text"> Text </option><option value="longtext"> LongText </option><option value="mediumtext"> MediumText </option><option value="boolean"> Boolean </option><option value="float"> Float </option><option value="double"> Double </option><option value="enum"> Enum </option></select><div id="enumfield' +
+            '" class="form-control" onchange="addenumfiled(this)"><option value="increments"> Increments </option><option value="integer"> Integer </option><option value="unsignedInteger"> unsignedInteger </option><option value="biginteger"> BigInteger </option><option value="unsignedBigInteger"> unsignedBigInteger </option><option value="string"> String </option><option value="timestamps"> Timestamps </option><option value="text"> Text </option><option value="longtext"> LongText </option><option value="mediumtext"> MediumText </option><option value="boolean"> Boolean </option><option value="float"> Float </option><option value="double"> Double </option><option value="enum"> Enum </option></select><div id="enumfield' +
             number + '" style="display:none;" ><input type="text" class="form-control mt-1" name="addmore[' + number +
             '][enumFieldForm]"></div></td>'
         html +=
@@ -116,14 +116,17 @@
 
     function relation_dynamic(num) {
         html = '<tr>'
-        html += '<td width="200" class="p-1"><select name="relations_column[' + num +
-            '][relType]" id="relType" class="form-control"><option value="hasOne"> One To One </option><option value="hasMany"> One To Many </option><option value="belongsTo"> Beelongs To </option><option value="belongsToMany"> Belongs To Many </option></select></td>'
+        html += '<td width="200" class="p-1"><select num="' + num + '" name="relations_column[' + num +
+            '][relType]" id="relType" class="form-control" onchange="addTableIfBelongsToMany(this)"><option value="hasOne"> One To One </option><option value="hasMany"> One To Many </option><option value="belongsTo"> Beelongs To </option><option value="belongsToMany"> Belongs To Many </option></select></td>'
         html += '<td width="200" class="p-1"><center><input type="text" class="form-control" name="relations_column[' +
             num +
-            '][relModel]" ></center></td>'
+            '][relModel]" ><input type="text" class="form-control" name="relations_column[' +
+            num +
+            '][relRefTbl]" id="freftbl' + num +
+            '" style="display:none;" placeholder="masukan nama table relasi"></center></td>'
         html += '<td width="200" class="p-1"><center><input type="text" class="form-control" name="relations_column[' +
             num +
-            '][relForeign]"></center></td>'
+            '][relForeign]" ></center></td>'
         html += '<td width="200" class="p-1"><center><input type="text" class="form-control" name="relations_column[' +
             num +
             '][relLocal]"></center></td>'
@@ -137,5 +140,10 @@
 
     function addenumfiled(e) {
         (e.value == 'enum') ? $('#enumfield' + e.id).show(): $('#enumfield' + e.id).hide();
+    }
+
+    function addTableIfBelongsToMany(e) {
+        (e.value == 'belongsToMany') ? $('#freftbl' + e.getAttribute('num')).show(): $('#freftbl' + e.getAttribute(
+            'num')).hide();
     }
 </script>

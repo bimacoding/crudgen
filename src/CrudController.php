@@ -79,13 +79,18 @@ class CrudController extends Controller
                 $tdInsert .= Crudgen::buildHtmlIndex('body',$k['fieldNameForm'],strtolower($request->modelName));
             }
             $dataDB .= (isset($k['isForeignForm']) ? Crudgen::buildTypeData($k['dbTypeForm'],$k['fieldNameForm'],$k['enumFieldForm'],true) : Crudgen::buildTypeData($k['dbTypeForm'],$k['fieldNameForm'],$k['enumFieldForm'],true));
-            $hrc .= ((isset($request->relations_column) && isset($k['isForeignForm'])) ? Crudgen::renderRelationFormCreate($request->relations_column) : null);
-            $hre .= ((isset($request->relations_column) && isset($k['isForeignForm'])) ? Crudgen::renderRelationFormEdit($request->relations_column,strtolower($request->modelName)) : null);
-            $rlt .= ((isset($request->relations_column) && isset($k['isForeignForm'])) ? Crudgen::createRelationModels($request->relations_column) : null);
-            $brt .= ((isset($request->relations_column) && isset($k['isForeignForm'])) ? Crudgen::bindRelationToController($request->relations_column) : null);
-            $brc .= ((isset($request->relations_column) && isset($k['isForeignForm'])) ? Crudgen::bindRelationToCompact($request->relations_column) : null);
-            $brn .= ((isset($request->relations_column) && isset($k['isForeignForm'])) ? Crudgen::bindRelationNamespace($request->relations_column) : null);
+            if (isset($request->relations_column)) {
+                $hrc .= ((Crudgen::checkrel($request->relations_column,$k['fieldNameForm'])) ? Crudgen::renderRelationFormCreate($request->relations_column) : null);
+                $hre .= ((Crudgen::checkrel($request->relations_column,$k['fieldNameForm'])) ? Crudgen::renderRelationFormEdit($request->relations_column,strtolower($request->modelName)) : null);
+                $rlt .= ((Crudgen::checkrel($request->relations_column,$k['fieldNameForm'])) ? Crudgen::createRelationModels($request->relations_column) : null);
+                $brt .= ((Crudgen::checkrel($request->relations_column,$k['fieldNameForm'])) ? Crudgen::bindRelationToController($request->relations_column) : null);
+                $brc .= ((Crudgen::checkrel($request->relations_column,$k['fieldNameForm'])) ? Crudgen::bindRelationToCompact($request->relations_column) : null);
+                $brn .= ((Crudgen::checkrel($request->relations_column,$k['fieldNameForm'])) ? Crudgen::bindRelationNamespace($request->relations_column) : null);
+            }
+
         }
+
+        // dd(array_merge($request->all()['addmore'],$request->relations_column));
 
         $model = [
             '{{modelName}}' => ucwords($request->modelName),
@@ -159,7 +164,7 @@ class CrudController extends Controller
                 ]
             ]
         ];
-        // dd(array_merge($pathslist,$model));
+        dd(array_merge($pathslist,$model));
         $exec = Crudgen::createCrud($pathslist,$model);
         if ($exec) {
             try {

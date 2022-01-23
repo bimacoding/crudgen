@@ -145,6 +145,11 @@ class Crudgen {
         return $out;
     }
 
+    public static function checkrel(array $rel = [],$key)
+    {
+        return array_search($key, array_column($rel, 'relForeign'));
+    }
+
     public static function buildHtml($type,$name, $enumfield = null){
         $out = '';
         if($enumfield!=null){
@@ -192,7 +197,7 @@ class Crudgen {
         if($enumfield!=null){
             $opt = '';
             foreach(explode(',',$enumfield) as $ef){
-                $opt .= "\t<option value=\"".str_replace(['\'',','],'', $ef)."\" {!! (\$".$param."->".$name." == '".str_replace(['\'',','],'', $ef).") ? 'selected' : '') !!}>".str_replace(['\'',','],'', $ef)."</option>\n";
+                $opt .= "\t<option value=\"".str_replace(['\'',','],'', $ef)."\" {!! ((\$".$param."->".$name." == '".str_replace(['\'',','],'', $ef)."') ? 'selected' : '') !!}>".str_replace(['\'',','],'', $ef)."</option>\n";
             }
         }
         switch ($type) {
