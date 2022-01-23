@@ -14,8 +14,19 @@
     "authors": [
         {
             "name": "bimacoding",
-            "email": "bimacoding@gmail.com"
+            "email": "bimacoding@gmail.com",
+            "role": "Developer"
         }
     ],
+    "extra": {
+        "laravel":{
+            "providers": [
+                "Erendi\\Crudgenerator\\CrudServiceProvider"
+            ],
+            "aliases": {
+                "Fileupload": "Erendi\\Crudgenerator\\Facades\\Crud.php"
+            }
+        }
+    },
     "minimum-stability": "dev"
 }
