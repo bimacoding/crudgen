@@ -164,7 +164,6 @@ class CrudController extends Controller
                 ]
             ]
         ];
-        dd(array_merge($pathslist,$model));
         $exec = Crudgen::createCrud($pathslist,$model);
         if ($exec) {
             try {
