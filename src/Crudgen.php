@@ -62,9 +62,8 @@ class Crudgen {
             if (isset($r['relRefTbl'])) {
                 $out .= (new Crudgen)->buildRelation($r['relType'],$r['relModel'],$r['relRefTbl'],$r['relForeign'],$r['relLocal']);
             }else{
-                $out .= (new Crudgen)->buildRelation($r['relType'],$r['relModel'],$r['relForeign'],$r['relLocal']);
+                $out .= (new Crudgen)->buildRelation($r['relType'],$r['relModel'],null,$r['relForeign'],$r['relLocal']);
             }
-
         }
         return $out;
     }
