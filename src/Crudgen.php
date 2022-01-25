@@ -59,7 +59,12 @@ class Crudgen {
     public static function createRelationModels(array $arr){
         $out = '';
         foreach($arr as $k => $r){
-            $out .= (new Crudgen)->buildRelation($r['relType'],$r['relModel'],$r['relForeign'],$r['relLocal']);
+            if (isset($r['relRefTbl'])) {
+                $out .= (new Crudgen)->buildRelation($r['relType'],$r['relModel'],$r['relRefTbl'],$r['relForeign'],$r['relLocal']);
+            }else{
+                $out .= (new Crudgen)->buildRelation($r['relType'],$r['relModel'],$r['relForeign'],$r['relLocal']);
+            }
+
         }
         return $out;
     }
@@ -114,7 +119,7 @@ class Crudgen {
         return $out;
     }
 
-    public static function buildRelation($type,$modelname,$foreign,$local){
+    public static function buildRelation($type,$modelname,$mdlrelation = null,$foreign,$local){
         $out = '';
 
         switch ($type) {
@@ -135,7 +140,7 @@ class Crudgen {
                 break;
             case 'belongsToMany':
                 $out .= "\tpublic function ".strtolower($modelname)."(){\r\n";
-                $out .= "\t\treturn \$this->".$type."(".ucwords($modelname)."::class);\r\n";
+                $out .= "\t\treturn \$this->".$type."(".ucwords($modelname)."::class,'".$mdlrelation."');\r\n";
                 $out .= "\t}\t\n";
                 break;
             default:
